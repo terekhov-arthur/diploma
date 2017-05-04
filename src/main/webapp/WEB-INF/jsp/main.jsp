@@ -4,6 +4,6 @@
     <title>$Title$</title>
 </head>
 <body>
-    <h1>Solution successfully passed all tests: ${result}</h1>
+    <h1>${data}</h1>
 </body>
 </html>
