@@ -3,7 +3,9 @@ package ua.nure.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Table(name = "m_user")
 @Entity
 public class User {
 
