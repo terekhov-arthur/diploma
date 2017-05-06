@@ -6,6 +6,7 @@
 <body>
 <form action="/task" method="post" enctype="multipart/form-data">
     <input type="file" name="template"/>
+    <input type="file" name="test"/>
     <input type="submit" value="send">
 </form>
 </body>
