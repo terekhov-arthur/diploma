@@ -12,6 +12,7 @@ public class Task {
     private long id;
 
     private String name;
+    private String description;
 
     @ManyToOne
     private User owner;
@@ -35,5 +36,12 @@ public class Task {
     }
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

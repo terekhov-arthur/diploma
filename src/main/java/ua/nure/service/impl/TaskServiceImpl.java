@@ -1,7 +1,6 @@
 package ua.nure.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ua.nure.model.Task;
 import ua.nure.repository.TaskRepository;
@@ -33,5 +32,30 @@ public class TaskServiceImpl implements TaskService {
         storageService.save(StringUtil.getSourceFileName(task), source);
         storageService.save(StringUtil.getTestFileName(task), test);
         taskRepository.save(task);
+    }
+
+    @Override
+    public String loadTaskSource(Task task) {
+        return storageService.load(StringUtil.getSourceFileName(task));
+    }
+
+    public Task findOne(Long aLong) {
+        return taskRepository.findOne(aLong);
+    }
+
+    public boolean exists(Long aLong) {
+        return taskRepository.exists(aLong);
+    }
+
+    public Iterable<Task> findAll() {
+        return taskRepository.findAll();
+    }
+
+    public Iterable<Task> findAll(Iterable<Long> iterable) {
+        return taskRepository.findAll(iterable);
+    }
+
+    public long count() {
+        return taskRepository.count();
     }
 }

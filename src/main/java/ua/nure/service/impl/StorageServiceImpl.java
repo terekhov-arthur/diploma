@@ -29,7 +29,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public String read(String fileName) {
+    public String load(String fileName) {
         try {
             return new String(Files.readAllBytes(Paths.get(SOURCE_DIR + fileName)));
         }
