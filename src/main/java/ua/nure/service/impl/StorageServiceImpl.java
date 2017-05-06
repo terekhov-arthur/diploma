@@ -15,10 +15,12 @@ import java.util.stream.Collectors;
 @Service
 public class StorageServiceImpl implements StorageService {
 
+    private static final String SOURCE_DIR = "data/";
+
     //todo: add uniqueness check
     @Override
     public void save(String fileName, InputStream inputStream) {
-        try (FileWriter writer = new FileWriter(fileName)) {
+        try (FileWriter writer = new FileWriter(SOURCE_DIR +fileName)) {
             writer.write(readFile(inputStream));
         }
         catch (IOException e) {
@@ -29,7 +31,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public String read(String fileName) {
         try {
-            return new String(Files.readAllBytes(Paths.get(fileName)));
+            return new String(Files.readAllBytes(Paths.get(SOURCE_DIR + fileName)));
         }
         catch (IOException e) {
             e.printStackTrace();
