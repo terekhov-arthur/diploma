@@ -4,6 +4,7 @@
     <title>$Title$</title>
 </head>
 <body>
+        <h3>${error}</h3>
     <h1>${result}</h1>
 </body>
 </html>

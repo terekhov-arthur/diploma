@@ -13,6 +13,8 @@ public class Task {
 
     private String name;
     private String description;
+    private String sourceClassName;
+    private String testClassName;
 
     @ManyToOne
     private User owner;
@@ -43,5 +45,25 @@ public class Task {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSourceClassName()
+    {
+        return sourceClassName;
+    }
+
+    public void setSourceClassName(String sourceClassName)
+    {
+        this.sourceClassName = sourceClassName;
+    }
+
+    public String getTestClassName()
+    {
+        return testClassName;
+    }
+
+    public void setTestClassName(String testClassName)
+    {
+        this.testClassName = testClassName;
     }
 }

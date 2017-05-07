@@ -29,14 +29,23 @@ public class TaskServiceImpl implements TaskService {
     public void save(Task task, InputStream source, InputStream test) {
         task.setOwner(context.getUser());
 
-        storageService.save(StringUtil.getSourceFileName(task), source);
-        storageService.save(StringUtil.getTestFileName(task), test);
+        String sourceData = storageService.save(StringUtil.getSourceFileName(task), source);
+        String testData = storageService.save(StringUtil.getTestFileName(task), test);
+
+        task.setSourceClassName(StringUtil.getClassName(sourceData));
+        task.setTestClassName(StringUtil.getClassName(testData));
+
         taskRepository.save(task);
     }
 
     @Override
-    public String loadTaskSource(Task task) {
+    public String loadTask(Task task) {
         return storageService.load(StringUtil.getSourceFileName(task));
+    }
+
+    @Override
+    public String loadTest(Long id) {
+        return storageService.load(StringUtil.getTestFileName(findOne(id)));
     }
 
     public Task findOne(Long aLong) {
