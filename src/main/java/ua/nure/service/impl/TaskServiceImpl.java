@@ -7,7 +7,7 @@ import ua.nure.repository.TaskRepository;
 import ua.nure.service.StorageService;
 import ua.nure.service.TaskService;
 import ua.nure.util.Context;
-import ua.nure.util.StringUtil;
+import ua.nure.util.StringUtils;
 
 import java.io.InputStream;
 
@@ -29,23 +29,23 @@ public class TaskServiceImpl implements TaskService {
     public void save(Task task, InputStream source, InputStream test) {
         task.setOwner(context.getUser());
 
-        String sourceData = storageService.save(StringUtil.getSourceFileName(task), source);
-        String testData = storageService.save(StringUtil.getTestFileName(task), test);
+        String sourceData = storageService.save(StringUtils.getSourceFileName(task), source);
+        String testData = storageService.save(StringUtils.getTestFileName(task), test);
 
-        task.setSourceClassName(StringUtil.getClassName(sourceData));
-        task.setTestClassName(StringUtil.getClassName(testData));
+        task.setSourceClassName(StringUtils.getClassName(sourceData));
+        task.setTestClassName(StringUtils.getClassName(testData));
 
         taskRepository.save(task);
     }
 
     @Override
     public String loadTask(Task task) {
-        return storageService.load(StringUtil.getSourceFileName(task));
+        return storageService.load(StringUtils.getSourceFileName(task));
     }
 
     @Override
     public String loadTest(Long id) {
-        return storageService.load(StringUtil.getTestFileName(findOne(id)));
+        return storageService.load(StringUtils.getTestFileName(findOne(id)));
     }
 
     public Task findOne(Long aLong) {

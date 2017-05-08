@@ -5,9 +5,11 @@ import ua.nure.model.Task;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StringUtil {
+public class StringUtils {
 
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("class\\s+([\\w\\d]+)");
+    public static final String TEST_METHOD_NAME = "test";
+
 
     public static String getSourceFileName(Task task) {
         return task.getOwner().getLogin() + "_" + task.getName() + "_source.java";

@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 @Service
 public class StorageServiceImpl implements StorageService {
 
-    private static final String SOURCE_DIR = "data/";
-    private static final String TEMP_DIR = SOURCE_DIR + "temp/";
+    public static final String SOURCE_DIR = "data/";
+    public static final String TEMP_DIR = SOURCE_DIR + "temp/";
 
     //todo: add uniqueness check
     @Override
