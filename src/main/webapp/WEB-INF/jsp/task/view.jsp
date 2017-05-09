@@ -3,13 +3,14 @@
 <html>
 <head>
     <title>${task.name}</title>
+    <%@include file="../../jspf/header.jspf"%>
 </head>
 <body>
     <h2>${task.description}</h2>
-    <form action="/task/${task.id}/check" method="post">
-        <textarea name="solution" cols="70" rows="10">${source}</textarea>
+    <form:form action="/task/${task.id}/check" method="post">
+        <textarea name="solution" cols="70" rows="10">${task.source}</textarea>
         <br>
         <input type="submit" value="Run">
-    </form>
+    </form:form>
 </body>
 </html>

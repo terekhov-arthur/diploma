@@ -1,51 +1,45 @@
 package ua.nure.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import ua.nure.model.Task;
 import ua.nure.repository.TaskRepository;
+import ua.nure.repository.UserRepository;
 import ua.nure.service.StorageService;
 import ua.nure.service.TaskService;
-import ua.nure.util.Context;
-import ua.nure.util.StringUtils;
 
 import java.io.InputStream;
+
+import static ua.nure.util.StringUtils.removePackage;
 
 @Service
 public class TaskServiceImpl implements TaskService {
 
     private final StorageService storageService;
-    private final Context context;
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TaskServiceImpl(StorageService storageService, Context context, TaskRepository taskRepository) {
+    public TaskServiceImpl(StorageService storageService, TaskRepository taskRepository, UserRepository userRepository) {
         this.storageService = storageService;
-        this.context = context;
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void save(Task task, InputStream source, InputStream test) {
-        task.setOwner(context.getUser());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        task.setOwner(userRepository.findByUsername(user.getUsername()));
 
-        String sourceData = storageService.save(StringUtils.getSourceFileName(task), source);
-        String testData = storageService.save(StringUtils.getTestFileName(task), test);
+        String sourceData = removePackage(storageService.readFile(source));
+        String testData = removePackage(storageService.readFile(test));
 
-        task.setSourceClassName(StringUtils.getClassName(sourceData));
-        task.setTestClassName(StringUtils.getClassName(testData));
+        task.setSource(sourceData);
+        task.setTest(testData);
 
         taskRepository.save(task);
-    }
-
-    @Override
-    public String loadTask(Task task) {
-        return storageService.load(StringUtils.getSourceFileName(task));
-    }
-
-    @Override
-    public String loadTest(Long id) {
-        return storageService.load(StringUtils.getTestFileName(findOne(id)));
     }
 
     public Task findOne(Long aLong) {

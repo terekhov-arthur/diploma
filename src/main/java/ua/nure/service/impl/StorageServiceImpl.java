@@ -1,5 +1,7 @@
 package ua.nure.service.impl;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import ua.nure.service.StorageService;
 
@@ -35,7 +37,8 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public String saveTemp(String fileName, String data) {
-        String basePath = TEMP_DIR + "admin/";
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String basePath = TEMP_DIR + user.getUsername() +"/";
         new File(basePath).mkdirs();
 
         String path = basePath + fileName + ".java";
@@ -59,9 +62,13 @@ public class StorageServiceImpl implements StorageService {
         return "";
     }
 
-    private String readFile(InputStream inputStream) throws IOException {
+    @Override
+    public String readFile(InputStream inputStream) {
         try (BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream))) {
             return buffer.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return "";
     }
 }

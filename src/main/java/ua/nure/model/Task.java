@@ -3,6 +3,7 @@ package ua.nure.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -13,8 +14,9 @@ public class Task {
 
     private String name;
     private String description;
-    private String sourceClassName;
-    private String testClassName;
+
+    @Lob private String source;
+    @Lob private String test;
 
     @ManyToOne
     private User owner;
@@ -47,23 +49,21 @@ public class Task {
         this.description = description;
     }
 
-    public String getSourceClassName()
+    public String getSource()
     {
-        return sourceClassName;
+        return source;
+    }
+    public void setSource(String source)
+    {
+        this.source = source;
     }
 
-    public void setSourceClassName(String sourceClassName)
+    public String getTest()
     {
-        this.sourceClassName = sourceClassName;
+        return test;
     }
-
-    public String getTestClassName()
+    public void setTest(String test)
     {
-        return testClassName;
-    }
-
-    public void setTestClassName(String testClassName)
-    {
-        this.testClassName = testClassName;
+        this.test = test;
     }
 }

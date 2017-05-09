@@ -2,13 +2,9 @@ package ua.nure.data;
 
 public class StringTaskTest {
 
-    private StringTask task;
-
-    public StringTaskTest(StringTask task) {
-        this.task = task;
-    }
-
     public boolean test(){
+        StringTask task = new StringTask();
+
         boolean result = true;
 
         result &= "1".equals(task.convert(1));

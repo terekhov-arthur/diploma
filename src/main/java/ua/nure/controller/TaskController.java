@@ -1,6 +1,8 @@
 package ua.nure.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,7 @@ import ua.nure.service.StorageService;
 import ua.nure.service.TaskService;
 import ua.nure.service.impl.CompileService;
 import ua.nure.service.impl.StorageServiceImpl;
-import ua.nure.util.Context;
+import ua.nure.util.StringUtils;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -35,15 +37,12 @@ public class TaskController {
 
     private final TaskService taskService;
     private final StorageService storageService;
-
-    private final Context context;
     private final CompileService compileService;
 
     @Autowired
-    public TaskController(TaskService taskService, StorageService storageService, Context context, CompileService compileService) {
+    public TaskController(TaskService taskService, StorageService storageService, CompileService compileService) {
         this.taskService = taskService;
         this.storageService = storageService;
-        this.context = context;
         this.compileService = compileService;
     }
 
@@ -57,19 +56,15 @@ public class TaskController {
         Task task = taskService.findOne(id);
         model.addAttribute("task", task);
 
-        String source = taskService.loadTask(task);
-        model.addAttribute("source", source);
-
         return "task/view";
     }
 
     @PostMapping
-    public String post(@RequestParam("source") MultipartFile source,
-                       @RequestParam(TEST_METHOD_NAME) MultipartFile test,
+    public String post(@RequestParam("sourceData") MultipartFile source,
+                       @RequestParam("testData") MultipartFile test,
                        @ModelAttribute Task task,
                        Model model) throws IOException {
         //todo: do some validation;
-
         taskService.save(task, source.getInputStream(), test.getInputStream());
         model.addAttribute("result", "success");
 
@@ -80,14 +75,15 @@ public class TaskController {
     @PostMapping("/{id}/check")
     public String check(@PathVariable("id") long id, @RequestParam("solution") String solution, Model model)
             throws Exception {
+
         Task task = taskService.findOne(id);
+        String test = task.getTest();
 
-        String solutionClass = task.getSourceClassName();
-        String testClass = task.getTestClassName();
-        String testData = taskService.loadTest(id);
-
+        String solutionClass = StringUtils.getClassName(solution);
         String solutionPath = storageService.saveTemp(solutionClass, solution);
-        String testPath = storageService.saveTemp(testClass, testData);
+
+        String testClass = StringUtils.getClassName(test);
+        String testPath = storageService.saveTemp(testClass, test);
 
         List<Diagnostic<? extends JavaFileObject>> diagnostics = compileService.compile(solutionPath, testPath);
 
@@ -96,7 +92,8 @@ public class TaskController {
             return "main";
         }
 
-        URL classpath = new File(StorageServiceImpl.TEMP_DIR + context.getUser().getLogin()).toURI().toURL();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        URL classpath = new File(StorageServiceImpl.TEMP_DIR + user.getUsername()).toURI().toURL();
         URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classpath });
         Class.forName(solutionClass, false, classLoader);
 
