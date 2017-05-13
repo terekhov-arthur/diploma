@@ -6,15 +6,21 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import ua.nure.service.impl.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    public void configAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsServiceImpl detailsService) throws Exception {
+        authenticationManagerBuilder.userDetailsService(detailsService);
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .antMatchers( "/bootstrap/**").permitAll()
+            .antMatchers("/bootstrap/**").permitAll()
             .anyRequest().authenticated()
                 .and()
             .formLogin()
@@ -23,11 +29,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .logout()
                 .permitAll();
-    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-            .withUser("user").password("password").roles("USER");
     }
 }

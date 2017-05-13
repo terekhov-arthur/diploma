@@ -2,7 +2,9 @@ package ua.nure;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
@@ -21,5 +23,14 @@ public class CodeCompilerApplication {
 		resolver.setSuffix(".jsp");
 		resolver.setViewClass(JstlView.class);
 		return resolver;
+	}
+
+	@Bean
+	public FilterRegistrationBean registerOpenSessionInViewFilterBean() {
+		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+		OpenEntityManagerInViewFilter filter = new OpenEntityManagerInViewFilter();
+		registrationBean.setFilter(filter);
+		registrationBean.setOrder(5);
+		return registrationBean;
 	}
 }

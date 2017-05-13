@@ -1,10 +1,10 @@
 package ua.nure.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import ua.nure.model.Task;
+import ua.nure.model.User;
+import ua.nure.model.security.UserDetailsImpl;
 import ua.nure.repository.TaskRepository;
 import ua.nure.repository.UserRepository;
 import ua.nure.service.StorageService;
@@ -30,7 +30,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void save(Task task, InputStream source, InputStream test) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = UserDetailsImpl.getCurrentUser();
         task.setOwner(userRepository.findByUsername(user.getUsername()));
 
         String sourceData = removePackage(storageService.readFile(source));

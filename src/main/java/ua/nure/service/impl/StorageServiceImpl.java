@@ -1,8 +1,8 @@
 package ua.nure.service.impl;
 
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import ua.nure.model.User;
+import ua.nure.model.security.UserDetailsImpl;
 import ua.nure.service.StorageService;
 
 import java.io.BufferedReader;
@@ -37,7 +37,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public String saveTemp(String fileName, String data) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = UserDetailsImpl.getCurrentUser();
         String basePath = TEMP_DIR + user.getUsername() +"/";
         new File(basePath).mkdirs();
 

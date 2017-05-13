@@ -1,8 +1,6 @@
 package ua.nure.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import ua.nure.model.Task;
+import ua.nure.model.security.UserDetailsImpl;
 import ua.nure.service.StorageService;
 import ua.nure.service.TaskService;
 import ua.nure.service.impl.CompileService;
@@ -92,8 +91,10 @@ public class TaskController {
             return "main";
         }
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        URL classpath = new File(StorageServiceImpl.TEMP_DIR + user.getUsername()).toURI().toURL();
+        URL classpath = new File(StorageServiceImpl.TEMP_DIR + UserDetailsImpl.getCurrentUser()
+                                                                                       .getUsername())
+                            .toURI().toURL();
+
         URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classpath });
         Class.forName(solutionClass, false, classLoader);
 
