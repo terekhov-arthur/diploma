@@ -1,17 +1,16 @@
 package ua.nure.data;
 
+import static org.junit.Assert.*;
+import org.junit.Test;
+
 public class StringTaskTest {
 
-    public boolean test(){
+    @Test
+    public void test(){
         StringTask task = new StringTask();
 
-        boolean result = true;
-
-        result &= "1".equals(task.convert(1));
-        result &= "2".equals(task.convert(2));
-        result &= "3".equals(task.convert(3));
-        result &= "1234567".equals(task.convert(1234567));
-
-        return result;
+        assertEquals("1", task.convert(1));
+        assertEquals("100", task.convert(100));
+        assertEquals("1234", task.convert(1234));
     }
 }

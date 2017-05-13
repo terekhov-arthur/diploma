@@ -1,5 +1,7 @@
 package ua.nure.controller;
 
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +24,9 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
-
-import static ua.nure.util.StringUtils.TEST_METHOD_NAME;
 
 @Controller
 @RequestMapping("/task")
@@ -98,11 +97,8 @@ public class TaskController {
         URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classpath });
         Class.forName(solutionClass, false, classLoader);
 
-        Object taskTest = Class.forName(testClass, false, classLoader).newInstance();
-        Method method = taskTest.getClass().getMethod(TEST_METHOD_NAME);
-        boolean result = (boolean) method.invoke(taskTest);
-
-        model.addAttribute("result", result);
+        Result result = JUnitCore.runClasses(Class.forName(testClass, false, classLoader));
+        model.addAttribute("result", result.getFailureCount() == 0);
         return "main";
     }
 
