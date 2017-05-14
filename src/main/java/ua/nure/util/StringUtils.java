@@ -7,7 +7,6 @@ public class StringUtils {
 
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile("class\\s+([\\w\\d]+)");
     private static final String PACKAGE_PATTERN = "package .*;\\s*";
-    public static final String TEST_METHOD_NAME = "test";
 
     public static String getClassName(String data){
         Matcher matcher = CLASS_NAME_PATTERN.matcher(data);

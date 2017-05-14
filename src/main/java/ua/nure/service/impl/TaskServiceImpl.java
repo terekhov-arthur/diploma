@@ -33,8 +33,8 @@ public class TaskServiceImpl implements TaskService {
         User user = UserDetailsImpl.getCurrentUser();
         task.setOwner(userRepository.findByUsername(user.getUsername()));
 
-        String sourceData = removePackage(storageService.readFile(source));
-        String testData = removePackage(storageService.readFile(test));
+        String sourceData = removePackage(storageService.read(source));
+        String testData = removePackage(storageService.read(test));
 
         task.setSource(sourceData);
         task.setTest(testData);

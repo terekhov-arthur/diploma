@@ -78,10 +78,10 @@ public class TaskController {
         String test = task.getTest();
 
         String solutionClass = StringUtils.getClassName(solution);
-        String solutionPath = storageService.saveTemp(solutionClass, solution);
+        String solutionPath = storageService.save(solutionClass, solution);
 
         String testClass = StringUtils.getClassName(test);
-        String testPath = storageService.saveTemp(testClass, test);
+        String testPath = storageService.save(testClass, test);
 
         List<Diagnostic<? extends JavaFileObject>> diagnostics = compileService.compile(solutionPath, testPath);
 
@@ -99,6 +99,7 @@ public class TaskController {
 
         Result result = JUnitCore.runClasses(Class.forName(testClass, false, classLoader));
         model.addAttribute("result", result.getFailureCount() == 0);
+        storageService.removeTmpFolder();
         return "main";
     }
 
