@@ -18,3 +18,26 @@
 .right-btn {
     border-radius: 0 7px 15px 0;
 }
+
+#source {
+    position: relative;
+    top: -568px;
+    left: 126px;
+
+    width: 750px;
+    height: 470px;
+
+    border: 0;
+    outline: none;
+    resize: none;
+    font-size: 14pt;
+    color: whitesmoke;
+    background-color: #263238;
+}
+
+.run-button {
+    position: relative;
+    top: -603px;
+    left: 800px;
+    width: 75px;
+}

@@ -19,8 +19,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //todo: remove task from permitted
         http.authorizeRequests()
-            .antMatchers("/bootstrap/**", "/sign-up").permitAll()
+            .antMatchers("/bootstrap/**", "/sign-up" , "/task/*").permitAll()
             .anyRequest().authenticated()
                 .and()
             .formLogin()
