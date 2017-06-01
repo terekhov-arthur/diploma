@@ -1,8 +1,11 @@
 package ua.nure.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
@@ -20,6 +23,9 @@ public class Task {
 
     @ManyToOne
     private User owner;
+
+    @ManyToOne
+    private Level level;
 
     public long getId() {
         return id;
@@ -65,5 +71,14 @@ public class Task {
     public void setTest(String test)
     {
         this.test = test;
+    }
+
+    public Level getLevel()
+    {
+        return level;
+    }
+    public void setLevel(Level level)
+    {
+        this.level = level;
     }
 }

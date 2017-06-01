@@ -1,14 +1,10 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Sign In</title>
-    <%@ include file="../jspf/header.jspf"%>
+    <%@ include file="../jspf/head.jspf"%>
 </head>
 <body>
-    <%--<c:if test="${sign-up-successful}">--%>
-        <%--<h2>You have successfully signed up!</h2>--%>
-    <%--</c:if>--%>
+    <%@ include file="../jspf/head.jspf"%>
     <div class="login-form center-block">
         <form:form action="/login" method="post">
             <input class="form-control" type="text" name="username" placeholder="Username"><br>

@@ -4,7 +4,7 @@
 <head>
     <link rel="stylesheet" type="text/css" href="src/main/webapp/bootstrap/css/global.css"/>
     <title>${task.name}</title>
-    <%@include file="../../jspf/header.jspf" %>
+    <%@include file="../../jspf/head.jspf" %>
 </head>
 <body>
 <div class="container">

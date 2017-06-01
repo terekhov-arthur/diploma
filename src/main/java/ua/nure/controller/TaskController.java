@@ -1,8 +1,8 @@
 package ua.nure.controller;
 
-import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,40 +12,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import ua.nure.model.Level;
 import ua.nure.model.Task;
+import ua.nure.model.TaskStatistic;
 import ua.nure.model.security.UserDetailsImpl;
+import ua.nure.repository.LevelRepository;
 import ua.nure.service.StorageService;
 import ua.nure.service.TaskService;
 import ua.nure.service.impl.CompileService;
-import ua.nure.service.impl.StorageServiceImpl;
-import ua.nure.util.StringUtils;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.List;
 
 @Controller
 @RequestMapping("/task")
 public class TaskController {
 
-
     private final TaskService taskService;
-    private final StorageService storageService;
     private final CompileService compileService;
+    private final LevelRepository levelRepository;
 
     @Autowired
-    public TaskController(TaskService taskService, StorageService storageService, CompileService compileService) {
+    public TaskController(TaskService taskService, CompileService compileService, LevelRepository levelRepository) {
         this.taskService = taskService;
-        this.storageService = storageService;
         this.compileService = compileService;
+        this.levelRepository = levelRepository;
     }
 
     @GetMapping
-    public String get(){
+    public String get(Model model){
+        List<Level> levels = levelRepository.findAll();
+        model.addAttribute("levels",levels);
         return "task/add";
     }
 
@@ -69,38 +68,35 @@ public class TaskController {
         return "main";
     }
 
-    //todo: refactor this shit
+    //todo: refactor it
     @PostMapping("/{id}/check")
     public String check(@PathVariable("id") long id, @RequestParam("solution") String solution, Model model)
             throws Exception {
 
         Task task = taskService.findOne(id);
-        String test = task.getTest();
-
-        String solutionClass = StringUtils.getClassName(solution);
-        String solutionPath = storageService.save(solutionClass, solution);
-
-        String testClass = StringUtils.getClassName(test);
-        String testPath = storageService.save(testClass, test);
-
-        List<Diagnostic<? extends JavaFileObject>> diagnostics = compileService.compile(solutionPath, testPath);
+        TaskStatistic statistic = taskService.findOrCreateStatistic(UserDetailsImpl.getCurrentUser(), task);
+        List<Diagnostic<? extends JavaFileObject>> diagnostics = compileService.compile(solution, task);
 
         if (!diagnostics.isEmpty()) {
+            statistic.failed();
             handleErrors(model, diagnostics);
-            return "main";
+            return "task/"+id;
         }
 
-        URL classpath = new File(StorageServiceImpl.TEMP_DIR + UserDetailsImpl.getCurrentUser()
-                                                                                       .getUsername())
-                            .toURI().toURL();
+        Result result = taskService.verify(solution, task);
+        updateStatistic(statistic, result);
+        taskService.saveStatistic(statistic);
 
-        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { classpath });
-        Class.forName(solutionClass, false, classLoader);
-
-        Result result = JUnitCore.runClasses(Class.forName(testClass, false, classLoader));
         model.addAttribute("result", result.getFailureCount() == 0);
-        storageService.removeTmpFolder();
         return "main";
+    }
+
+    private void updateStatistic(TaskStatistic statistic, Result result) {
+        if(result.getFailureCount() == 0) {
+            statistic.setCompleted(true);
+        } else {
+            statistic.failed();
+        }
     }
 
     private void handleErrors(Model model, List<Diagnostic<? extends JavaFileObject>> diagnostics) {
