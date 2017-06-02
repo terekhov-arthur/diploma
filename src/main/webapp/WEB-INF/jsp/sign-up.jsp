@@ -1,14 +1,12 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Sign Up</title>
-    <%@ include file="../jspf/header.jspf"%>
+    <%@ include file="../jspf/head.jspf"%>
 </head>
 <body>
 <div class="login-form center-block">
     <c:set var="cl" value="form-control"/>
-    <c:if test="${error not empty}">
+    <c:if test="${not empty error}">
         <c:set var="cl" value="form-control has-error"/>
     </c:if>
     <form:form action="/sign-up" method="post">
