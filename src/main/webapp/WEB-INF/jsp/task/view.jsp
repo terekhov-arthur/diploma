@@ -2,7 +2,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="src/main/webapp/bootstrap/css/global.css"/>
     <title>${task.name}</title>
     <%@include file="../../jspf/head.jspf" %>
 </head>
@@ -15,6 +14,7 @@
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-1">
+            <code class="code-box">${task.source}</code>
             <form:form action="/task/${task.id}/check" method="post">
                 <img src="<c:url value="/bootstrap/img/mac.png"/>" alt="macbook image">
                 <textarea id="source" name="solution" cols="70" rows="10">${task.source}</textarea>

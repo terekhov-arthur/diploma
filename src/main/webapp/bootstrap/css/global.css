@@ -19,6 +19,14 @@
     border-radius: 0 7px 15px 0;
 }
 
+
+.run-button {
+    position: relative;
+    top: -603px;
+    left: 800px;
+    width: 75px;
+}
+
 #source {
     position: relative;
     top: -568px;
@@ -30,14 +38,21 @@
     border: 0;
     outline: none;
     resize: none;
-    font-size: 14pt;
-    color: whitesmoke;
-    background-color: #263238;
+    font-size: 16pt;
+    color: transparent;
+    background-color: transparent;
+
+    padding: 0.5em;
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
 }
 
-.run-button {
-    position: relative;
-    top: -603px;
-    left: 800px;
-    width: 75px;
+.code-box {
+    white-space: pre-wrap;
+    font-size: 16pt;
+    position: absolute;
+    top: 36px;
+    left: 140px;
+    /*z-index: 1;*/
+    width: 750px;
+    height: 470px;
 }
