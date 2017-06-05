@@ -39,7 +39,8 @@
     outline: none;
     resize: none;
     font-size: 16pt;
-    color: transparent;
+    /*color: transparent;*/
+    -webkit-text-fill-color: transparent;
     background-color: transparent;
 
     padding: 0.5em;
@@ -55,4 +56,12 @@
     /*z-index: 1;*/
     width: 750px;
     height: 470px;
+}
+
+.offset-top-100{
+    margin-top: 100px;
+}
+
+#task-list tr{
+    cursor: hand;
 }

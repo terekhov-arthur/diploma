@@ -1,5 +1,4 @@
 <jsp:useBean id="task" scope="request" type="ua.nure.model.Task"/>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>${task.name}</title>

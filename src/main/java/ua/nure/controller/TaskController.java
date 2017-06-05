@@ -24,7 +24,9 @@ import ua.nure.service.impl.CompileService;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/task")
@@ -54,6 +56,16 @@ public class TaskController {
         model.addAttribute("task", task);
 
         return "task/view";
+    }
+
+    @GetMapping("/list")
+    public String tasks(Model model) {
+        List<Task> tasks = taskService.findAll()
+                                      .stream()
+                                      .sorted(Comparator.comparingLong(t -> t.getLevel().getId()))
+                                      .collect(Collectors.toList());
+        model.addAttribute("tasks", tasks);
+        return "task/list";
     }
 
     @PostMapping

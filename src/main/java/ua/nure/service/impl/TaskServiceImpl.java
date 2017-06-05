@@ -67,7 +67,7 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.exists(aLong);
     }
 
-    public Iterable<Task> findAll() {
+    public List<Task> findAll() {
         return taskRepository.findAll();
     }
 

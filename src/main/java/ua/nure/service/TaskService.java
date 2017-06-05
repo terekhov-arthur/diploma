@@ -16,7 +16,7 @@ public interface TaskService {
     void save(Task task, InputStream source, InputStream test);
     Task findOne(Long id);
     boolean exists(Long id);
-    Iterable<Task> findAll();
+    List<Task> findAll();
     TaskStatistic findOrCreateStatistic(User user, Task task);
     Result verify(String solution, Task task) throws Exception;
     void saveStatistic(TaskStatistic statistic);
