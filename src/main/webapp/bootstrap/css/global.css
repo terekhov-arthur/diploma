@@ -1,10 +1,11 @@
 body {
     background-image: url("/bootstrap/img/back.jpg");
     background-size: 100%;
+    color: whitesmoke;
 }
 .login-form {
     width: 200px;
-    margin-top: 200px;
+    margin-top: 100px;
 }
 
 .align-right {
@@ -22,7 +23,6 @@ body {
 .right-btn {
     border-radius: 0 7px 15px 0;
 }
-
 
 .run-button {
     position: relative;
@@ -68,4 +68,8 @@ body {
 
 #task-list tr{
     cursor: hand;
+}
+
+#task-list {
+    background-color: #1b9b9d;
 }

@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <table id="task-list" class="table table-striped">
+            <table id="task-list" class="table">
                 <c:forEach var="task" varStatus="i" items="${tasks}">
                     <tr>
                         <td class="task-data col-md-3">

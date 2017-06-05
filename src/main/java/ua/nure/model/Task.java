@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 @Entity
 public class Task {
@@ -24,6 +26,9 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Level level;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Label> labels;
 
     public long getId() {
         return id;
@@ -78,5 +83,14 @@ public class Task {
     public void setLevel(Level level)
     {
         this.level = level;
+    }
+
+    public List<Label> getLabels()
+    {
+        return labels;
+    }
+    public void setLabels(List<Label> labels)
+    {
+        this.labels = labels;
     }
 }
