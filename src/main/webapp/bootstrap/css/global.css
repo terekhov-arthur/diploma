@@ -1,3 +1,7 @@
+body {
+    background-image: url("/bootstrap/img/back.jpg");
+    background-size: 100%;
+}
 .login-form {
     width: 200px;
     margin-top: 200px;
