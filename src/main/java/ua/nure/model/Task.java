@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -28,8 +29,8 @@ public class Task {
     @ManyToOne(fetch = FetchType.EAGER)
     private Level level;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private Set<Label> labels;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Label> labels;
 
     public long getId() {
         return id;
@@ -86,12 +87,51 @@ public class Task {
         this.level = level;
     }
 
-    public Set<Label> getLabels()
+    public List<Label> getLabels()
     {
         return labels;
     }
-    public void setLabels(Set<Label> labels)
+    public void setLabels(List<Label> labels)
     {
         this.labels = labels;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Task task = (Task) o;
+
+        if (id != task.id)
+            return false;
+        if (name != null ? !name.equals(task.name) : task.name != null)
+            return false;
+        if (description != null ? !description.equals(task.description) : task.description != null)
+            return false;
+        if (source != null ? !source.equals(task.source) : task.source != null)
+            return false;
+        if (test != null ? !test.equals(task.test) : task.test != null)
+            return false;
+        if (owner != null ? !owner.equals(task.owner) : task.owner != null)
+            return false;
+        if (level != null ? !level.equals(task.level) : task.level != null)
+            return false;
+        return labels != null ? labels.equals(task.labels) : task.labels == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (source != null ? source.hashCode() : 0);
+        result = 31 * result + (test != null ? test.hashCode() : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + (level != null ? level.hashCode() : 0);
+        result = 31 * result + (labels != null ? labels.hashCode() : 0);
+        return result;
     }
 }

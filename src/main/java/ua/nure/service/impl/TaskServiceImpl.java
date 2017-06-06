@@ -5,11 +5,13 @@ import org.junit.runner.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nure.model.Label;
+import ua.nure.model.Level;
 import ua.nure.model.Task;
 import ua.nure.model.TaskStatistic;
 import ua.nure.model.User;
 import ua.nure.model.security.UserDetailsImpl;
 import ua.nure.repository.LabelRepository;
+import ua.nure.repository.LevelRepository;
 import ua.nure.repository.TaskRepository;
 import ua.nure.repository.TaskStatisticRepository;
 import ua.nure.repository.UserRepository;
@@ -22,12 +24,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static ua.nure.util.StringUtils.removePackage;
 
@@ -39,15 +40,17 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
     private final TaskStatisticRepository taskStatisticRepository;
     private final LabelRepository labelRepository;
+    private final LevelRepository levelRepository;
 
     @Autowired
     public TaskServiceImpl(StorageService storageService, TaskRepository taskRepository, UserRepository userRepository,
-            TaskStatisticRepository taskStatisticRepository, LabelRepository labelRepository) {
+            TaskStatisticRepository taskStatisticRepository, LabelRepository labelRepository, LevelRepository levelRepository) {
         this.storageService = storageService;
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.taskStatisticRepository = taskStatisticRepository;
         this.labelRepository = labelRepository;
+        this.levelRepository = levelRepository;
     }
 
     @Override
@@ -62,14 +65,15 @@ public class TaskServiceImpl implements TaskService {
         task.setTest(testData);
 
         Set<Label> alreadyExistingLabels = labelRepository.findAllByValueIgnoreCaseIn(labels);
-        if(alreadyExistingLabels.size() == labels.size()) {
-            task.setLabels(alreadyExistingLabels);
-        } else {
+        if(alreadyExistingLabels.size() != labels.size()) {
             labels.removeAll(alreadyExistingLabels.stream().map(Label::getValue).collect(Collectors.toSet()));
             labelRepository.save(mapToLabelSet(labels)).forEach(alreadyExistingLabels::add);
         }
 
-        task.setLabels(alreadyExistingLabels);
+        task.setLabels(new ArrayList<>(alreadyExistingLabels));
+        if (task.getLevel() == null) {
+            task.setLevel(levelRepository.save(new Level()));
+        }
         taskRepository.save(task);
     }
 
@@ -93,6 +97,11 @@ public class TaskServiceImpl implements TaskService {
     public TaskStatistic findOrCreateStatistic(User user, Task task) {
         return Optional.ofNullable(taskStatisticRepository.findByUserAndTask(user, task))
                        .orElse(TaskStatistic.create(user, task));
+    }
+
+    @Override
+    public List<TaskStatistic> findByUser(User user) {
+        return taskStatisticRepository.findByUser(user);
     }
 
     @Override

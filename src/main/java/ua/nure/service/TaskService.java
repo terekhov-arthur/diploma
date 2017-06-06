@@ -15,6 +15,7 @@ public interface TaskService {
     boolean exists(Long id);
     List<Task> findAll();
     TaskStatistic findOrCreateStatistic(User user, Task task);
+    List<TaskStatistic> findByUser(User user);
     Result verify(String solution, Task task) throws Exception;
     void saveStatistic(TaskStatistic statistic);
 }

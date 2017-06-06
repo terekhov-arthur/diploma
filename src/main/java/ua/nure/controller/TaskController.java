@@ -17,6 +17,7 @@ import ua.nure.model.TaskStatistic;
 import ua.nure.model.User;
 import ua.nure.model.security.UserDetailsImpl;
 import ua.nure.repository.LevelRepository;
+import ua.nure.repository.UserRepository;
 import ua.nure.service.TaskService;
 import ua.nure.service.impl.CompileService;
 
@@ -25,6 +26,7 @@ import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,12 +37,15 @@ public class TaskController {
     private final TaskService taskService;
     private final CompileService compileService;
     private final LevelRepository levelRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TaskController(TaskService taskService, CompileService compileService, LevelRepository levelRepository) {
+    public TaskController(TaskService taskService, CompileService compileService, LevelRepository levelRepository,
+            UserRepository userRepository) {
         this.taskService = taskService;
         this.compileService = compileService;
         this.levelRepository = levelRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -70,12 +75,46 @@ public class TaskController {
         return "task/list";
     }
 
+    @GetMapping("/next")
+    public String next(){
+        return findNext().map(task -> "redirect:/task/" + task.getId()).orElse("task/haveNoTasks");
+    }
+
+    //todo: move the method to service
+    private Optional<Task> findNext(){
+        final User user = UserDetailsImpl.getCurrentUser();
+        Set<Task> tasks = getTasks(user);
+
+        if(tasks.isEmpty()) {
+            long nextLevelId = user.getLevel().getId() + 1;
+            if (levelRepository.exists(nextLevelId)) {
+                user.setLevel(levelRepository.findOne(nextLevelId));
+                userRepository.save(user);
+                tasks = getTasks(user);
+            }
+        }
+        return tasks.isEmpty() ? Optional.empty() : Optional.of(tasks.iterator().next());
+    }
+
+    private Set<Task> getTasks(final User user) {
+        final Set<Task> tasks = levelRepository.findOne(user.getLevel().getId()).getTasks();
+        taskService.findByUser(user)
+                            .stream()
+                            .filter(TaskStatistic::isCompleted)
+                            .filter(ts -> ts.getTask().getLevel().getId() == user.getLevel().getId())
+                            .forEach(st -> tasks.remove(st.getTask()));
+        return tasks;
+    }
+
     @PostMapping
     public String post(@RequestParam("sourceData[]") MultipartFile[] data,
                        @ModelAttribute Task task,
                        @RequestParam("labelSet") Set<String> labels,
                        Model model) throws IOException {
         //todo: do some validation;
+
+        task.setName(task.getName().trim());
+        task.setDescription(task.getDescription().trim());
 
         MultipartFile source = data[0].getName().toLowerCase().endsWith("test") ? data[1] : data[0];
         MultipartFile test = data[0].getName().toLowerCase().endsWith("test") ? data[0] : data[1];

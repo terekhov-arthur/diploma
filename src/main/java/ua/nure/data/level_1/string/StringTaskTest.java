@@ -1,4 +1,4 @@
-package ua.nure.data.string;
+package ua.nure.data.level_1.string;
 
 import org.junit.Test;
 

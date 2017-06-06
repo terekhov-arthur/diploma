@@ -1,6 +1,7 @@
-package ua.nure.data.sum;
+package ua.nure.data.level_1.sum;
 
 import org.junit.Test;
+import ua.nure.data.level_1.sum.SumTask;
 
 import java.util.Random;
 
