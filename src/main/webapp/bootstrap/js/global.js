@@ -1,11 +1,8 @@
 $(document).ready(function() {
 
     $('#sourceData').fileinput({
-        //minFileCount:2,
-        // required: true,
         validateInitialCount: true,
         overwriteInitial: false,
-        // isUploadable: true,
         showCaption: false,
         showUpload: false,
         showClose: false,
@@ -26,6 +23,45 @@ $(document).ready(function() {
         var newDisplay = prevDisplay === 'none' ? 'block' : 'none';
         span.css({'display' : newDisplay});
     });
+
+    $('.labels')
+        // don't navigate away from the field on tab when selecting an item
+        .on( "keydown", function( event ) {
+            if ( event.keyCode === $.ui.keyCode.TAB &&
+                $( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+            }
+        })
+        .autocomplete({
+            source: function( request, response ) {
+                $.getJSON( "/label", {
+                    term: extractLast( request.term )
+                }, response );
+            },
+            search: function() {
+                // custom minLength
+                var term = extractLast( this.value );
+                if ( term.length < 2 ) {
+                    return false;
+                }
+            },
+            focus: function() {
+                // prevent value inserted on focus
+                return false;
+            },
+            select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( "" );
+                this.value = Array.from(new Set(terms)).join( ", " );
+                //todo: turn string into labels
+                return false;
+            }
+        });
 });
 
 function render() {
@@ -55,4 +91,11 @@ function handleTab (e) {
 function validate() {
     //todo: handle error
     return $('#sourceData').fileinput('getFilesCount') === 2;
+}
+
+function split( val ) {
+    return val.split( /,\s*/ );
+}
+function extractLast( term ) {
+    return split( term ).pop();
 }

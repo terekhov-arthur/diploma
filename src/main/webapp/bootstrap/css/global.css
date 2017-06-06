@@ -92,3 +92,7 @@ body {
     background-color: black;
     padding: 0;
 }
+
+form input {
+    color:black;
+}
