@@ -25,7 +25,7 @@ public class User {
     @OneToOne
     private Level level;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user"/*, fetch = FetchType.EAGER*/)
     private List<TaskStatistic> statistics;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -87,8 +87,7 @@ public class User {
     {
         return statistics;
     }
-    public void setStatistics(List<TaskStatistic> statistics)
-    {
+    public void setStatistics(List<TaskStatistic> statistics) {
         this.statistics = statistics;
     }
 }

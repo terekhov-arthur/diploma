@@ -72,7 +72,7 @@ body {
 }
 
 #task-list {
-    background-color: #1b9b9d;
+    background-color: #434a4a;
 }
 
 .preview {
@@ -83,4 +83,12 @@ body {
 
 .preview::-webkit-scrollbar {
     display: none;
+}
+
+.statistic {
+    position: absolute;
+    top: 100px;
+    right: 50px;
+    background-color: black;
+    padding: 0;
 }

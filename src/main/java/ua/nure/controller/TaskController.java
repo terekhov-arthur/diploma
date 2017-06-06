@@ -1,5 +1,6 @@
 package ua.nure.controller;
 
+import org.hibernate.Hibernate;
 import org.junit.runner.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.nure.model.Level;
 import ua.nure.model.Task;
 import ua.nure.model.TaskStatistic;
+import ua.nure.model.User;
 import ua.nure.model.security.UserDetailsImpl;
 import ua.nure.repository.LevelRepository;
 import ua.nure.service.StorageService;
@@ -51,9 +53,11 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public String get(@PathVariable("id") long id, Model model) {
+    public String get(@PathVariable("id") final long id, Model model) {
         Task task = taskService.findOne(id);
         model.addAttribute("task", task);
+        User user = UserDetailsImpl.getCurrentUser();
+        model.addAttribute("statistic", taskService.findOrCreateStatistic(user, task));
 
         return "task/view";
     }
@@ -78,9 +82,8 @@ public class TaskController {
         MultipartFile test = data[0].getName().toLowerCase().endsWith("test") ? data[0] : data[1];
 
         taskService.save(task, source.getInputStream(), test.getInputStream());
-        model.addAttribute("result", "success");
 
-        return "main";
+        return "redirect:/task/list";
     }
 
     //todo: refactor it
@@ -95,15 +98,18 @@ public class TaskController {
         if (!diagnostics.isEmpty()) {
             statistic.failed();
             handleErrors(model, diagnostics);
-            return "task/"+id;
+            return "redirect:/task/"+id;
         }
 
         Result result = taskService.verify(solution, task);
         updateStatistic(statistic, result);
         taskService.saveStatistic(statistic);
 
-        model.addAttribute("result", result.getFailureCount() == 0);
-        return "main";
+        if(result.getFailureCount() > 0) {
+            return "redirect:/task/"+id;
+        }
+
+        return "redirect:/task/list";
     }
 
     private void updateStatistic(TaskStatistic statistic, Result result) {

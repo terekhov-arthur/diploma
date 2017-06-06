@@ -20,6 +20,21 @@
                 <input class="btn btn-success run-button" type="submit" value="Run">
             </form:form>
         </div>
+        <div class="col-md-2 statistic">
+            <jsp:useBean id="statistic" scope="request" type="ua.nure.model.TaskStatistic"/>
+            <c:if test="${not empty statistic}">
+                <table class="table">
+                    <tr>
+                        <td>Completed</td>
+                        <td>${statistic.completed}</td>
+                    </tr>
+                    <tr>
+                        <td>Attempts failed</td>
+                        <td>${statistic.fails}</td>
+                    </tr>
+                </table>
+            </c:if>
+        </div>
     </div>
 </div>
 </body>
