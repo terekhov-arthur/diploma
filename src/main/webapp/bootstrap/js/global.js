@@ -1,4 +1,18 @@
 $(document).ready(function() {
+
+    $('#sourceData').fileinput({
+        //minFileCount:2,
+        // required: true,
+        validateInitialCount: true,
+        overwriteInitial: false,
+        // isUploadable: true,
+        showCaption: false,
+        showUpload: false,
+        showClose: false,
+        previewClass: 'preview',
+        allowedFileExtensions: ["java"]
+    });
+
     render();
 
     var $source = $('#source');
@@ -36,4 +50,9 @@ function handleTab (e) {
 
         return false;
     }
+}
+
+function validate() {
+    //todo: handle error
+    return $('#sourceData').fileinput('getFilesCount') === 2;
 }

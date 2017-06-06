@@ -12,5 +12,5 @@
 <script src="<c:url value="/bootstrap/file-uploader/js/plugins/piexif.min.js"/>"></script>
 <script src="<c:url value="/bootstrap/file-uploader/js/plugins/sortable.min.js"/>"></script>
 <script src="<c:url value="/bootstrap/file-uploader/js/plugins/purify.min.js"/>"></script>
-<script src="<c:url value="/bootstrap/file-uploader/js/fileinput.min.js"/>"></script>
+<script src="<c:url value="/bootstrap/file-uploader/js/fileinput.js"/>"></script>
 <script src="<c:url value="/bootstrap/js/bootstrap.min.js"/>"></script>

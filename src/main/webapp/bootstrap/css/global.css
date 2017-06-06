@@ -44,6 +44,7 @@ body {
     resize: none;
     font-size: 16pt;
     /*color: transparent;*/
+    color:black;
     -webkit-text-fill-color: transparent;
     background-color: transparent;
 
@@ -72,4 +73,14 @@ body {
 
 #task-list {
     background-color: #1b9b9d;
+}
+
+.preview {
+    background-color: white;
+    overflow: hidden;
+    width: 680px !important;
+}
+
+.preview::-webkit-scrollbar {
+    display: none;
 }

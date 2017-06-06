@@ -69,11 +69,14 @@ public class TaskController {
     }
 
     @PostMapping
-    public String post(@RequestParam("sourceData") MultipartFile source,
-                       @RequestParam("testData") MultipartFile test,
+    public String post(@RequestParam("sourceData[]") MultipartFile[] data,
                        @ModelAttribute Task task,
                        Model model) throws IOException {
         //todo: do some validation;
+
+        MultipartFile source = data[0].getName().toLowerCase().endsWith("test") ? data[1] : data[0];
+        MultipartFile test = data[0].getName().toLowerCase().endsWith("test") ? data[0] : data[1];
+
         taskService.save(task, source.getInputStream(), test.getInputStream());
         model.addAttribute("result", "success");
 
