@@ -3,12 +3,13 @@ package ua.nure.service.impl;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ua.nure.model.Label;
 import ua.nure.model.Task;
 import ua.nure.model.TaskStatistic;
 import ua.nure.model.User;
 import ua.nure.model.security.UserDetailsImpl;
+import ua.nure.repository.LabelRepository;
 import ua.nure.repository.TaskRepository;
 import ua.nure.repository.TaskStatisticRepository;
 import ua.nure.repository.UserRepository;
@@ -16,15 +17,17 @@ import ua.nure.service.StorageService;
 import ua.nure.service.TaskService;
 import ua.nure.util.StringUtils;
 
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ua.nure.util.StringUtils.removePackage;
 
@@ -35,18 +38,20 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final TaskStatisticRepository taskStatisticRepository;
+    private final LabelRepository labelRepository;
 
     @Autowired
     public TaskServiceImpl(StorageService storageService, TaskRepository taskRepository, UserRepository userRepository,
-            TaskStatisticRepository taskStatisticRepository) {
+            TaskStatisticRepository taskStatisticRepository, LabelRepository labelRepository) {
         this.storageService = storageService;
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.taskStatisticRepository = taskStatisticRepository;
+        this.labelRepository = labelRepository;
     }
 
     @Override
-    public void save(Task task, InputStream source, InputStream test) {
+    public void save(Task task, InputStream source, InputStream test, Set<String> labels) {
         User user = UserDetailsImpl.getCurrentUser();
         task.setOwner(userRepository.findByUsername(user.getUsername()));
 
@@ -56,7 +61,20 @@ public class TaskServiceImpl implements TaskService {
         task.setSource(sourceData);
         task.setTest(testData);
 
+        Set<Label> alreadyExistingLabels = labelRepository.findAllByValueIgnoreCaseIn(labels);
+        if(alreadyExistingLabels.size() == labels.size()) {
+            task.setLabels(alreadyExistingLabels);
+        } else {
+            labels.removeAll(alreadyExistingLabels.stream().map(Label::getValue).collect(Collectors.toSet()));
+            labelRepository.save(mapToLabelSet(labels)).forEach(alreadyExistingLabels::add);
+        }
+
+        task.setLabels(alreadyExistingLabels);
         taskRepository.save(task);
+    }
+
+    private List<Label> mapToLabelSet(Set<String> labels) {
+        return labels.stream().map(Label::new).distinct().collect(Collectors.toList());
     }
 
     public Task findOne(Long aLong) {

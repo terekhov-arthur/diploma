@@ -4,16 +4,13 @@ import org.junit.runner.Result;
 import ua.nure.model.Task;
 import ua.nure.model.TaskStatistic;
 import ua.nure.model.User;
-import ua.nure.repository.TaskStatisticRepository;
 
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Set;
 
 public interface TaskService {
-    void save(Task task, InputStream source, InputStream test);
+    void save(Task task, InputStream source, InputStream test, Set<String> labels);
     Task findOne(Long id);
     boolean exists(Long id);
     List<Task> findAll();

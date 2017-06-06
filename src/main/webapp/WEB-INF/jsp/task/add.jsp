@@ -17,7 +17,7 @@
                             <option value="${level.id}">Level ${level.id}</option>
                         </c:forEach>
                     </select><br>
-                    <input class="labels" type="text" name="labels[]" placeholder="Labels"><br>
+                    <input class="labels" type="text" name="labelSet" placeholder="Labels"><br>
                 </div>
                 <div class="col-md-8 col-md-offset-2" style="text-align: center;">
                     <label class="control-label">Select source and test files</label>

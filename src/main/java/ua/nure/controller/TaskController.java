@@ -1,9 +1,7 @@
 package ua.nure.controller;
 
-import org.hibernate.Hibernate;
 import org.junit.runner.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +17,6 @@ import ua.nure.model.TaskStatistic;
 import ua.nure.model.User;
 import ua.nure.model.security.UserDetailsImpl;
 import ua.nure.repository.LevelRepository;
-import ua.nure.service.StorageService;
 import ua.nure.service.TaskService;
 import ua.nure.service.impl.CompileService;
 
@@ -28,6 +25,7 @@ import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -75,13 +73,14 @@ public class TaskController {
     @PostMapping
     public String post(@RequestParam("sourceData[]") MultipartFile[] data,
                        @ModelAttribute Task task,
+                       @RequestParam("labelSet") Set<String> labels,
                        Model model) throws IOException {
         //todo: do some validation;
 
         MultipartFile source = data[0].getName().toLowerCase().endsWith("test") ? data[1] : data[0];
         MultipartFile test = data[0].getName().toLowerCase().endsWith("test") ? data[0] : data[1];
 
-        taskService.save(task, source.getInputStream(), test.getInputStream());
+        taskService.save(task, source.getInputStream(), test.getInputStream(), labels);
 
         return "redirect:/task/list";
     }
