@@ -26,7 +26,6 @@ public class CodeCompilerApplication {
 		return resolver;
 	}
 
-	//todo:looks like it does not work, maybe remove
 	@Bean
 	public FilterRegistrationBean registerOpenSessionInViewFilterBean() {
 		FilterRegistrationBean registrationBean = new FilterRegistrationBean();

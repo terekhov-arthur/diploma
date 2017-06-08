@@ -20,19 +20,24 @@
                 <li><a href="<c:url value="/task/next"/>">Next Task</a></li>
                 <li><p class="navbar-text" style="margin-left: 300px">Level ${user.level.id}</p></li>
                 <li class="paddingTop15">
-                    <div class="progress" style="text-align:center; width: 400px; margin: 0; height: 25px; background-color: #b1d1ec; display: inline-block">
-                        <script>
-                            $.get('/level/${user.level.id}/statistic', function (data) {
-                                var $progress = $('#progress');
-                                $progress.attr('aria-valuenow', data);
-                                $progress.width(data+'%');
-                                $progress.parent().text(data+'%');
-                            });
-                        </script>
-                        <div id="progress" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="line-height: 2em;">
+                    <div class="progress" style="text-align:center; width: 400px; margin: 0; height: 25px; background-color: #b1d1ec; display: inline-block; line-height: 2em;">
+                        <div id="progress" <%--style="color:transparent"--%>
+                             class="progress-bar progress-bar-info"
+                             role="progressbar"
+                             aria-valuenow="0"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            0%
                         </div>
-                        60%
                     </div>
+                    <script>
+                        $.get('/level/${user.level.id}/statistic', function (data) {
+                            var $progress = $('#progress');
+                            $progress.attr('aria-valuenow', data);
+                            $progress.width(data+'%');
+                            $progress.text(data+'%');
+                        });
+                    </script>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
