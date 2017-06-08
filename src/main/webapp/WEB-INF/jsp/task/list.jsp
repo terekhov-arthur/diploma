@@ -21,6 +21,9 @@
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse${levelStatus.index}">
                                     Level ${level.id}
+                                    <c:if test="${level.id < user.level.id}">
+                                        <span class="glyphicon glyphicon-ok" style="color:yellowgreen"></span>
+                                    </c:if>
                                 </a>
                             </h4>
 
@@ -31,11 +34,11 @@
                                     <c:forEach varStatus="taskStatus" var="task" items="${level.tasks}">
                                         <div class="panel panel-default">
                                             <div class="panel-heading" style="padding: 0">
-                                                <a href="/task/${task.id}" class="btn btn-lg btn-primary right-btn">Go</a>
+                                                <a href="/task/${task.id}" style="${task.level.id > user.level.id ? 'visibility:hidden' : ''}" class="btn btn-lg btn-primary right-btn">Go</a>
                                                 <h4 class="panel-title" style="display: inline; margin-left: -50px;">
                                                     <c:if test="${not empty task.description}"><a data-toggle="collapse"
                                                                                                   href="#collapse${levelStatus.index}${taskStatus.index}"></c:if>
-                                                        ${task.name}
+                                                        ${task.name} <c:if test="${completeMap[task.id]}"><span class="glyphicon glyphicon-ok" style="color:yellowgreen"></span></c:if>
                                                     <c:if test="${not empty task.description}"></a></c:if>
                                                 </h4>
                                             </div>

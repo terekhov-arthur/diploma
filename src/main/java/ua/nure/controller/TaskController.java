@@ -71,12 +71,16 @@ public class TaskController {
 
     @RequestMapping(value ="/list", method = {RequestMethod.GET, RequestMethod.POST})
     public String tasks(Model model) {
+        List<TaskStatistic> statistics = taskService.findByUser(UserDetailsImpl.getCurrentUser());
         List<Task> tasks = taskService.findAll()
                                       .stream()
                                       .sorted(Comparator.comparingLong(t -> t.getLevel().getId()))
                                       .collect(Collectors.toList());
+
         model.addAttribute("tasks", tasks);
         model.addAttribute("levels", taskService.findLevels());
+        model.addAttribute("completeMap", statistics.stream().collect(Collectors.toMap(st -> st.getTask().getId(), TaskStatistic::isCompleted)));
+
         return "task/list";
     }
 
@@ -115,8 +119,7 @@ public class TaskController {
     @PostMapping
     public String add(@RequestParam("sourceData[]") MultipartFile[] data,
                        @ModelAttribute Task task,
-                       @RequestParam("labelSet") Set<String> labels,
-                       Model model) throws IOException {
+                       @RequestParam("labelSet") Set<String> labels) throws IOException {
         //todo: do some validation;
         MultipartFile source = data[0].getName().toLowerCase().endsWith("test") ? data[1] : data[0];
         MultipartFile test = data[0].getName().toLowerCase().endsWith("test") ? data[0] : data[1];
