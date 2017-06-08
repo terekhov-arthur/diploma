@@ -3,6 +3,7 @@ package ua.nure.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -14,6 +15,7 @@ public class TaskStatistic {
 
     private int fails;
     private boolean completed;
+    @Lob private String solution;
 
     @OneToOne   private Task task;
     @ManyToOne  private User user;
@@ -66,6 +68,13 @@ public class TaskStatistic {
         this.completed = completed;
     }
 
+    public String getSolution() {
+        return solution;
+    }
+    public void setSolution(String solution) {
+        this.solution = solution;
+    }
+    
     public static TaskStatistic create(User user, Task task){
         TaskStatistic taskStatistic = new TaskStatistic();
 

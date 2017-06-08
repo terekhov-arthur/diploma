@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import ua.nure.model.Level;
@@ -21,6 +22,7 @@ import ua.nure.repository.UserRepository;
 import ua.nure.service.TaskService;
 import ua.nure.service.impl.CompileService;
 
+import javax.servlet.http.HttpSession;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
@@ -55,7 +57,7 @@ public class TaskController {
         return "task/add";
     }
 
-    @GetMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     public String get(@PathVariable("id") final long id, Model model) {
         Task task = taskService.findOne(id);
         model.addAttribute("task", task);
@@ -126,32 +128,35 @@ public class TaskController {
 
     //todo: refactor it
     @PostMapping("/{id}/check")
-    public String check(@PathVariable("id") long id, @RequestParam("solution") String solution, Model model)
+    public String check(@PathVariable("id") long id, @RequestParam("solution") String solution, Model model, HttpSession session)
             throws Exception {
 
         Task task = taskService.findOne(id);
         TaskStatistic statistic = taskService.findOrCreateStatistic(UserDetailsImpl.getCurrentUser(), task);
         List<Diagnostic<? extends JavaFileObject>> diagnostics = compileService.compile(solution, task);
 
+        model.addAttribute("solution", solution);
+
         if (!diagnostics.isEmpty()) {
             statistic.failed();
             handleErrors(model, diagnostics);
-            return "redirect:/task/"+id;
+            return "forward:/task/"+id;
         }
 
         Result result = taskService.verify(solution, task);
-        updateStatistic(statistic, result);
+        updateStatistic(statistic, result, solution);
         taskService.saveStatistic(statistic);
 
         if(result.getFailureCount() > 0) {
-            return "redirect:/task/"+id;
+            return "forward:/task/"+id;
         }
 
         return "redirect:/task/list";
     }
 
-    private void updateStatistic(TaskStatistic statistic, Result result) {
+    private void updateStatistic(TaskStatistic statistic, Result result, String solution) {
         if(result.getFailureCount() == 0) {
+            statistic.setSolution(solution);
             statistic.setCompleted(true);
         } else {
             statistic.failed();
