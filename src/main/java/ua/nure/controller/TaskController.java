@@ -76,6 +76,7 @@ public class TaskController {
                                       .sorted(Comparator.comparingLong(t -> t.getLevel().getId()))
                                       .collect(Collectors.toList());
         model.addAttribute("tasks", tasks);
+        model.addAttribute("levels", taskService.findLevels());
         return "task/list";
     }
 

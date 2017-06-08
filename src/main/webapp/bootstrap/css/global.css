@@ -16,12 +16,10 @@ body {
     float: left;
 }
 
-.left-btn {
-    border-radius: 7px 0 0 15px;
-}
-
 .right-btn {
-    border-radius: 0 7px 15px 0;
+    position: relative;
+    left: 660px;
+    border-radius: 0 5px 5px 0;
 }
 
 .run-button {

@@ -94,6 +94,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Level> findLevels() {
+        return levelRepository.findAll();
+    }
+
+    @Override
     public TaskStatistic findOrCreateStatistic(User user, Task task) {
         return Optional.ofNullable(taskStatisticRepository.findByUserAndTask(user, task))
                        .orElse(TaskStatistic.create(user, task));
