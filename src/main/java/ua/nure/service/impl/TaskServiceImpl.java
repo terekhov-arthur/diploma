@@ -70,6 +70,7 @@ public class TaskServiceImpl implements TaskService {
         Set<Label> alreadyExistingLabels = labelRepository.findAllByValueIgnoreCaseIn(labels);
         if(alreadyExistingLabels.size() != labels.size()) {
             labels.removeAll(alreadyExistingLabels.stream().map(Label::getValue).collect(Collectors.toSet()));
+            labels.removeIf( l -> l.trim().equals(""));
             labelRepository.save(mapToLabelSet(labels)).forEach(alreadyExistingLabels::add);
         }
 

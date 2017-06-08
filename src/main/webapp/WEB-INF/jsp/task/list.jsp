@@ -16,7 +16,7 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel-group" id="accordion" style="color:black;">
                 <c:forEach varStatus="levelStatus" var="level" items="${levels}">
-                    <div class="panel panel-default">
+                    <div class="panel panel-default ${level.id < user.level.id ? 'panel-success': 'panel-warning'}">
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse${levelStatus.index}">
@@ -32,7 +32,7 @@
                             <div class="panel-body">
                                 <div class="panel-group">
                                     <c:forEach varStatus="taskStatus" var="task" items="${level.tasks}">
-                                        <div class="panel panel-default">
+                                        <div class="panel panel-default ${completeMap[task.id]? 'panel-success' : 'panel-info'}">
                                             <div class="panel-heading" style="padding: 0">
                                                 <a href="/task/${task.id}" style="${task.level.id > user.level.id ? 'visibility:hidden' : ''}" class="btn btn-lg btn-primary right-btn">Go</a>
                                                 <h4 class="panel-title" style="display: inline; margin-left: -50px;">

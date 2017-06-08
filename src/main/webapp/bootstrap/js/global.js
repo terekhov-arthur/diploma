@@ -1,4 +1,28 @@
-$(document).ready(function() {
+$(document).ready(function () {
+
+    $("#search").keyup(function () {
+        var labels = $(this).val().toLowerCase().split(/\s*,\s*/);
+        $('#task-panel').children().each(function () {
+            var arr = [];
+            $(this).find('span').each(function () {
+                arr.push($(this).text().toLowerCase());
+            });
+
+            var result = true;
+            labels.forEach(function (label) {
+                if(label.trim() != '') {
+                    if (!arr.includes(label)) {
+                        result = false;
+                    }
+                }
+            });
+            if (!result) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+    });
 
     $('#sourceData').fileinput({
         validateInitialCount: true,
@@ -21,43 +45,43 @@ $(document).ready(function() {
         var span = $(this).find('.task-data span');
         var prevDisplay = span.css('display');
         var newDisplay = prevDisplay === 'none' ? 'block' : 'none';
-        span.css({'display' : newDisplay});
+        span.css({'display': newDisplay});
     });
 
     $('.labels')
-        // don't navigate away from the field on tab when selecting an item
-        .on( "keydown", function( event ) {
-            if ( event.keyCode === $.ui.keyCode.TAB &&
-                $( this ).autocomplete( "instance" ).menu.active ) {
+    // don't navigate away from the field on tab when selecting an item
+        .on("keydown", function (event) {
+            if (event.keyCode === $.ui.keyCode.TAB &&
+                $(this).autocomplete("instance").menu.active) {
                 event.preventDefault();
             }
         })
         .autocomplete({
-            source: function( request, response ) {
-                $.getJSON( "/label", {
-                    term: extractLast( request.term )
-                }, response );
+            source: function (request, response) {
+                $.getJSON("/label", {
+                    term: extractLast(request.term)
+                }, response);
             },
-            search: function() {
+            search: function () {
                 // custom minLength
-                var term = extractLast( this.value );
-                if ( term.length < 2 ) {
+                var term = extractLast(this.value);
+                if (term.length < 2) {
                     return false;
                 }
             },
-            focus: function() {
+            focus: function () {
                 // prevent value inserted on focus
                 return false;
             },
-            select: function( event, ui ) {
-                var terms = split( this.value );
+            select: function (event, ui) {
+                var terms = split(this.value);
                 // remove the current input
                 terms.pop();
                 // add the selected item
-                terms.push( ui.item.value );
+                terms.push(ui.item.value);
                 // add placeholder to get the comma-and-space at the end
-                terms.push( "" );
-                this.value = Array.from(new Set(terms)).join( ", " );
+                terms.push("");
+                this.value = Array.from(new Set(terms)).join(", ");
                 //todo: turn string into labels
                 return false;
             }
@@ -69,13 +93,13 @@ function render() {
     var text = $('#source').val();
 
     $code.text(text);
-    $code.each(function(i, block) {
+    $code.each(function (i, block) {
         hljs.highlightBlock(block);
     });
 }
 
-function handleTab (e) {
-    if(e.key === 'Tab') {
+function handleTab(e) {
+    if (e.key === 'Tab') {
         var index = $(this).prop("selectionStart");
         var val = $(this).val();
         var output = [val.slice(0, index), '\t', val.slice(index)].join('');
@@ -93,9 +117,9 @@ function validate() {
     return $('#sourceData').fileinput('getFilesCount') === 2;
 }
 
-function split( val ) {
-    return val.split( /,\s*/ );
+function split(val) {
+    return val.split(/,\s*/);
 }
-function extractLast( term ) {
-    return split( term ).pop();
+function extractLast(term) {
+    return split(term).pop();
 }

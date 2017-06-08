@@ -158,6 +158,14 @@ public class TaskController {
         return "redirect:/task/list";
     }
 
+    @GetMapping("/free")
+    public String freeMode(Model model){
+        List<TaskStatistic> statistics = taskService.findByUser(UserDetailsImpl.getCurrentUser());
+        model.addAttribute("tasks", taskService.findAll());
+        model.addAttribute("completeMap", statistics.stream().collect(Collectors.toMap(st -> st.getTask().getId(), TaskStatistic::isCompleted)));
+        return "task/free";
+    }
+
     private void updateStatistic(TaskStatistic statistic, Result result, String solution) {
         if(result.getFailureCount() == 0) {
             statistic.setSolution(solution);
