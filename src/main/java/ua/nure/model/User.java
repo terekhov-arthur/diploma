@@ -28,7 +28,7 @@ public class User {
     @OneToMany(mappedBy = "user"/*, fetch = FetchType.EAGER*/)
     private List<TaskStatistic> statistics;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<UserRole> roles;
 
     public User() {
@@ -65,8 +65,7 @@ public class User {
         this.enabled = enabled;
     }
 
-    public Set<UserRole> getRoles()
-    {
+    public Set<UserRole> getRoles() {
         return roles;
     }
     public void setRoles(Set<UserRole> roles)

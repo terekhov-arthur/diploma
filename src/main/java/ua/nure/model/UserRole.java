@@ -42,4 +42,9 @@ public class UserRole {
     {
         this.user = user;
     }
+
+    @Override
+    public String toString() {
+        return role;
+    }
 }
