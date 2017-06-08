@@ -7,6 +7,9 @@
 <div class="container offset-top-100">
     <div class="row">
         <div class="col-md-2 col-md-offset-5"><h2>Tasks</h2></div>
+        <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <div class="col-md-1 col-md-offset-1"><a href="<c:url value="/task"/>" class="btn btn-primary">New Task</a></div>
+        </sec:authorize>
     </div>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">

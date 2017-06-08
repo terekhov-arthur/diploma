@@ -110,6 +110,7 @@ public class TaskController {
         return tasks;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public String post(@RequestParam("sourceData[]") MultipartFile[] data,
                        @ModelAttribute Task task,
