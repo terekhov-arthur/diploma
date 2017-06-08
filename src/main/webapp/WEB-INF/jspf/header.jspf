@@ -1,9 +1,49 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <sec:authentication var="user" property="principal.user" />
-<div class="container">
-    <div class="row">
-        <div class="col-md-2 col-md-offset-8">
-            <h1>${user.username} Level ${user.level.id}</h1><br>
+
+<nav class="navbar navbar-default" style="border-radius: 0">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <img src="<c:url value="/bootstrap/img/icon.png"/>" style="margin-right: 20px" width="50" height="50">
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="<c:url value="/task/list"/>">Tasks <span class="sr-only">(current)</span></a></li>
+                <li><a href="<c:url value="/task/next"/>">Next Task</a></li>
+                <li><p class="navbar-text" style="margin-left: 300px">Level ${user.level.id}</p></li>
+                <li class="paddingTop15">
+                    <div class="progress" style="text-align:center; width: 400px; margin: 0; height: 25px; background-color: #b1d1ec; display: inline-block">
+                        <script>
+                            $.get('/level/${user.level.id}/statistic', function (data) {
+                                var $progress = $('#progress');
+                                $progress.attr('aria-valuenow', data);
+                                $progress.width(data+'%');
+                                $progress.parent().text(data+'%');
+                            });
+                        </script>
+                        <div id="progress" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="line-height: 2em;">
+                        </div>
+                        60%
+                    </div>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <p class="navbar-text">${user.username}</p>
+                <li>
+                <form:form method="post" action="/logout" style="padding:0; margin:0">
+                    <button class="btn btn-link paddingTop15" style="outline: none">Logout</button>
+                </form:form>
+                </li>
+            </ul>
         </div>
     </div>
-</div>
+</nav>

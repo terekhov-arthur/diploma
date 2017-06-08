@@ -1,7 +1,6 @@
 package ua.nure.data.level_1.sum;
 
 import org.junit.Test;
-import ua.nure.data.level_1.sum.SumTask;
 
 import java.util.Random;
 
@@ -19,7 +18,7 @@ public class SumTaskTest {
             int b = random.nextInt(10000);
 
             int result = task.sum(a,b);
-            assertEquals(result, a+b);
+            assertEquals(a+b, result);
         }
     }
 }

@@ -69,7 +69,7 @@ public class TaskController {
         return "task/view";
     }
 
-    @GetMapping("/list")
+    @RequestMapping(value ="/list", method = {RequestMethod.GET, RequestMethod.POST})
     public String tasks(Model model) {
         List<Task> tasks = taskService.findAll()
                                       .stream()
@@ -113,15 +113,11 @@ public class TaskController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    public String post(@RequestParam("sourceData[]") MultipartFile[] data,
+    public String add(@RequestParam("sourceData[]") MultipartFile[] data,
                        @ModelAttribute Task task,
                        @RequestParam("labelSet") Set<String> labels,
                        Model model) throws IOException {
         //todo: do some validation;
-
-        task.setName(task.getName().trim());
-        task.setDescription(task.getDescription().trim());
-
         MultipartFile source = data[0].getName().toLowerCase().endsWith("test") ? data[1] : data[0];
         MultipartFile test = data[0].getName().toLowerCase().endsWith("test") ? data[0] : data[1];
 
@@ -149,11 +145,12 @@ public class TaskController {
 
         Result result = taskService.verify(solution, task);
         updateStatistic(statistic, result, solution);
-        taskService.saveStatistic(statistic);
 
         if(result.getFailureCount() > 0) {
             return "forward:/task/"+id;
         }
+
+        taskService.tryLevelUp();
 
         return "redirect:/task/list";
     }
@@ -165,6 +162,7 @@ public class TaskController {
         } else {
             statistic.failed();
         }
+        taskService.saveStatistic(statistic);
     }
 
     private void handleErrors(Model model, List<Diagnostic<? extends JavaFileObject>> diagnostics) {

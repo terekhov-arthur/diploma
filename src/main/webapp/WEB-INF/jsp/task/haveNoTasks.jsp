@@ -4,6 +4,7 @@
     <title>Title</title>
 </head>
 <body>
+    <%@include file="../../jspf/header.jspf"%>
     You achieved maximum level and completed all tasks
 </body>
 </html>

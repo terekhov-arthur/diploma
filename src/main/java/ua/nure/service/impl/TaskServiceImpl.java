@@ -55,6 +55,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void save(Task task, InputStream source, InputStream test, Set<String> labels) {
+        task.setName(task.getName().trim());
+        task.setDescription(task.getDescription().trim());
+
         User user = UserDetailsImpl.getCurrentUser();
         task.setOwner(userRepository.findByUsername(user.getUsername()));
 
@@ -137,7 +140,28 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findAll(iterable);
     }
 
-    public long count() {
-        return taskRepository.count();
+    @Override
+    public int getLevelStatistic(long levelId) {
+        Level level = levelRepository.findOne(levelId);
+        int result = 0;
+        if (level != null && !level.getTasks().isEmpty()) {
+            User user = UserDetailsImpl.getCurrentUser();
+            long completedCount = findByUser(user).stream().filter(st -> st.getTask().getLevel().getId() == levelId).filter(TaskStatistic::isCompleted).count();
+            result = (int) (completedCount / (double) level.getTasks().size() * 100);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean tryLevelUp() {
+        User user = UserDetailsImpl.getCurrentUser();
+        if (getLevelStatistic(user.getLevel().getId()) == 100) {
+            if (levelRepository.exists(user.getLevel().getId() + 1)) {
+                user.setLevel(levelRepository.findOne(user.getLevel().getId() + 1));
+                userRepository.save(user);
+                return true;
+            }
+        }
+        return false;
     }
 }

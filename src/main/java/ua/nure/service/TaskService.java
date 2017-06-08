@@ -20,4 +20,6 @@ public interface TaskService {
     List<TaskStatistic> findByUser(User user);
     Result verify(String solution, Task task) throws Exception;
     void saveStatistic(TaskStatistic statistic);
+    int getLevelStatistic(long levelId);
+    boolean tryLevelUp();
 }

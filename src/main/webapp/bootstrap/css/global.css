@@ -84,6 +84,7 @@ body {
 }
 
 .statistic {
+    border: 1px solid;
     position: absolute;
     top: 100px;
     right: 50px;
@@ -93,4 +94,8 @@ body {
 
 form input {
     color:black;
+}
+
+.paddingTop15 {
+    padding-top: 15px;
 }

@@ -5,11 +5,12 @@
     <%@include file="../../jspf/head.jspf" %>
 </head>
 <body>
+<%@include file="../../jspf/header.jspf" %>
 <jsp:useBean id="statistic" scope="request" type="ua.nure.model.TaskStatistic"/>
 <div class="container">
     <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <h2>${task.description}</h2>
+        <div class="col-md-7 col-md-offset-3" style="text-align: center; width:625px;">
+            <pre style="font-size: 14pt">${task.description}</pre>
         </div>
     </div>
     <div class="row">
@@ -37,7 +38,7 @@
                 <table class="table">
                     <tr>
                         <td>Completed</td>
-                        <td>${statistic.completed}</td>
+                        <td>${statistic.completed ? '<span class="glyphicon glyphicon-ok" style="color:yellowgreen"></span>' : '<span class="glyphicon glyphicon-remove" style="color:tomato"></span>'}</td>
                     </tr>
                     <tr>
                         <td>Attempts failed</td>
