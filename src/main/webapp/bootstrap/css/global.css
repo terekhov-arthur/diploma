@@ -99,3 +99,11 @@ form input {
 .paddingTop15 {
     padding-top: 15px;
 }
+
+.alertPosition {
+    position: absolute;
+    top: 100px;
+    left: 600px;
+    display: none;
+    z-index: 1;
+}

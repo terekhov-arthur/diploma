@@ -5,12 +5,12 @@
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+            <%--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">--%>
+                <%--<span class="sr-only">Toggle navigation</span>--%>
+                <%--<span class="icon-bar"></span>--%>
+                <%--<span class="icon-bar"></span>--%>
+                <%--<span class="icon-bar"></span>--%>
+            <%--</button>--%>
             <img src="<c:url value="/bootstrap/img/icon.png"/>" style="margin-right: 20px" width="50" height="50">
         </div>
 
@@ -18,10 +18,11 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="<c:url value="/task/list"/>">Tasks <span class="sr-only">(current)</span></a></li>
                 <li><a href="<c:url value="/task/next"/>">Next Task</a></li>
+                <li><a href="<c:url value="/task/free"/>">Free Mode</a></li>
                 <li><p class="navbar-text" style="margin-left: 300px">Level ${user.level.id}</p></li>
                 <li class="paddingTop15">
                     <div class="progress" style="text-align:center; width: 400px; margin: 0; height: 25px; background-color: #b1d1ec; display: inline-block; line-height: 2em;">
-                        <div id="progress" <%--style="color:transparent"--%>
+                        <div id="progress"
                              class="progress-bar progress-bar-info"
                              role="progressbar"
                              aria-valuenow="0"
@@ -52,3 +53,4 @@
         </div>
     </div>
 </nav>
+<div id="alert" class="alert alert-success alertPosition"><strong>Success!</strong> You have completed the task.</div>

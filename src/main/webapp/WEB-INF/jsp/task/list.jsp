@@ -57,5 +57,10 @@
         </div>
     </div>
 </div>
+<script>
+    if(window.location.href.indexOf('success') !== -1) {
+        showSuccess();
+    }
+</script>
 </body>
 </html>

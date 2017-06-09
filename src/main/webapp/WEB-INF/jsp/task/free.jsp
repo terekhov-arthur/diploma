@@ -8,7 +8,7 @@
 <div class="container">
     <div class="col-md-6 col-md-offset-3">
         <div class="row">
-            <input id="search" type="text" class="form-control" placeholder="Comma-separated labels">
+            <input id="search" type="text" class="form-control" autocomplete="true" placeholder="Comma-separated labels">
         </div>
         <br><br>
         <div class="row" style="color:black">

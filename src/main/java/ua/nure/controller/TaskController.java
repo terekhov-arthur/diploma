@@ -155,7 +155,7 @@ public class TaskController {
 
         taskService.tryLevelUp();
 
-        return "redirect:/task/list";
+        return "redirect:/task/list?success";
     }
 
     @GetMapping("/free")

@@ -48,7 +48,7 @@ $(document).ready(function () {
         span.css({'display': newDisplay});
     });
 
-    $('.labels')
+    $('.labels, #search')
     // don't navigate away from the field on tab when selecting an item
         .on("keydown", function (event) {
             if (event.keyCode === $.ui.keyCode.TAB &&
@@ -122,4 +122,8 @@ function split(val) {
 }
 function extractLast(term) {
     return split(term).pop();
+}
+
+function showSuccess() {
+    $('#alert').fadeIn(600).delay(2000).fadeOut(500);
 }
