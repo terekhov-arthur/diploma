@@ -136,7 +136,11 @@ public class TaskController {
 
         Task task = taskService.findOne(id);
         TaskStatistic statistic = taskService.findOrCreateStatistic(UserDetailsImpl.getCurrentUser(), task);
-        List<Diagnostic<? extends JavaFileObject>> diagnostics = compileService.compile(solution, task);
+        List<Diagnostic<? extends JavaFileObject>> diagnostics =
+                compileService.compile(solution, task)
+                              .stream()
+                              .filter(i -> i.getKind() == Diagnostic.Kind.ERROR)
+                              .collect(Collectors.toList());
 
         model.addAttribute("solution", solution);
 

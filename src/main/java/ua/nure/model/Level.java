@@ -1,13 +1,20 @@
 package ua.nure.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
+@Data
+@EqualsAndHashCode(exclude = "tasks")
+@ToString(exclude = "tasks")
 @Entity
 public class Level {
 
@@ -15,22 +22,4 @@ public class Level {
 
     @OneToMany(mappedBy = "level", fetch = FetchType.EAGER)
     private Set<Task> tasks;
-
-    public long getId()
-    {
-        return id;
-    }
-    public void setId(long id)
-    {
-        this.id = id;
-    }
-
-    public Set<Task> getTasks()
-    {
-        return tasks;
-    }
-    public void setTasks(Set<Task> tasks)
-    {
-        this.tasks = tasks;
-    }
 }

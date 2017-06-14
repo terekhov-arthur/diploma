@@ -1,5 +1,8 @@
 package ua.nure.model;
 
+import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -7,6 +10,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+@Data
+@ToString(exclude = {"task", "user"})
 @Entity
 public class TaskStatistic {
 
@@ -20,61 +25,10 @@ public class TaskStatistic {
     @OneToOne   private Task task;
     @ManyToOne  private User user;
 
-    public long getId()
-    {
-        return id;
-    }
-    public void setId(long id)
-    {
-        this.id = id;
-    }
-
-    public Task getTask()
-    {
-        return task;
-    }
-    public void setTask(Task task)
-    {
-        this.task = task;
-    }
-
-    public User getUser()
-    {
-        return user;
-    }
-    public void setUser(User user)
-    {
-        this.user = user;
-    }
-
-    public int getFails()
-    {
-        return fails;
-    }
-    public void setFails(int attempts)
-    {
-        this.fails = attempts;
-    }
     public void failed() {
         fails++;
     }
 
-    public boolean isCompleted()
-    {
-        return completed;
-    }
-    public void setCompleted(boolean completed)
-    {
-        this.completed = completed;
-    }
-
-    public String getSolution() {
-        return solution;
-    }
-    public void setSolution(String solution) {
-        this.solution = solution;
-    }
-    
     public static TaskStatistic create(User user, Task task){
         TaskStatistic taskStatistic = new TaskStatistic();
 
